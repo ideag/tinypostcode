@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name: tinyPostcode (testing updates)
- * Plugin URI: http://arunas.co
- * Description: Lietuviškų adresų autocomplete
- * Version: 0.1.1
+ * Plugin Name: tinyPostcode
+ * Plugin URI: https://api.aru.lt
+ * Description: Lietuviškų adresų autocomplete paslauga
+ * Version: 0.2.0
  * Author: Arūnas Liuiza
- * Author URI: http://arunas.co
+ * Author URI: httpa://arunas.co
  * Text Domain: tinypostcode
  *
- * Lietuviškų adresų autocomplete
+ * Lietuviškų adresų autocomplete paslauga
  *
  * @package TinyPostcode
  */
@@ -43,7 +43,15 @@ class TinyPostcode {
   public static $options = array(
     'api_key' => '',
   );
+  public static $settings = array();
+  public static $plugin_path = '';
   public static function init() {
+    self::$plugin_path = plugin_dir_path( __FILE__ );
+
+		// tinyOptions v 0.6.0.
+		self::$options = wp_parse_args( get_option( 'tinypostcode_options' ), self::$options );
+		add_action( 'plugins_loaded', array( 'TinyPostcode', 'init_options' ), 9999 - 0060 );
+
     add_action( 'wp_enqueue_scripts',         array( 'TinyPostcode', 'scripts' ) );
     add_action( 'admin_enqueue_scripts',      array( 'TinyPostcode', 'admin_scripts' ) );
     add_action( 'wp_ajax_tpc_limiter',        array( 'TinyPostcode', 'flag' ) );
@@ -120,4 +128,31 @@ class TinyPostcode {
     $notice .= '</div>';
     echo $notice;
   }
-}
+  public static function init_options() {
+		self::$settings = array(
+			'page' => array(
+				'title' 			=> __( 'tinyPostcode Settings', 'tinypostcode' ),
+				'menu_title'	=> __( 'tinyPostcode', 'tinypostcode' ),
+				'slug' 				=> 'tinypostcode-settings',
+				'option'			=> 'tinypostcode_options',
+				'description'	=> __( 'This plugin enables autocomplete on WooCommerce address fields via a Lithuanian postal addresses database.', 'tinypostcode' ),
+			),
+			'sections' => array(
+				'main' => array(
+					'title'				=> __( 'Main Settings	', 'tinypostcode' ),
+					'fields'	=> array(
+						'api_key' => array(
+							'title'	=> __( 'API Key', 'tinypostcode' ),
+						),
+					),
+				),
+			),
+			'l10n' => array(
+				'no_access'			=> __( 'You do not have sufficient permissions to access this page.', 'tinypostcode' ),
+				'save_changes'	=> esc_attr( 'Save Changes', 'tinypostcode' ),
+			),
+		);
+		require_once( self::$plugin_path . 'tiny/tiny.options.php' );
+		self::$settings = apply_filters( 'tinypostcode_settings', self::$settings );
+		self::$settings = new tinyOptions( self::$settings, __CLASS__ );
+	}}

@@ -354,7 +354,6 @@ class WP_GitHub_Updater {
 	 * @return object $transient updated plugin data transient
 	 */
 	public function api_check( $transient ) {
-
 		// Check if the transient contains the 'checked' information
 		// If not, just return its value without hacking it
 		if ( empty( $transient->checked ) )
@@ -362,6 +361,8 @@ class WP_GitHub_Updater {
 
 		// check the version and decide if it's new
 		$update = version_compare( $this->config['new_version'], $this->config['version'] );
+		// var_dump( $update );
+		// wp_die( 'aaa' );
 
 		if ( 1 === $update ) {
 			$response = new stdClass;

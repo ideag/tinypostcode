@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: tinyPostcode
+ * Plugin Name: tinyPostcode (testing updates)
  * Plugin URI: http://arunas.co
  * Description: Lietuviškų adresų autocomplete
- * Version: 0.1.0
+ * Version: 0.1.1
  * Author: Arūnas Liuiza
  * Author URI: http://arunas.co
  * Text Domain: tinypostcode
@@ -41,7 +41,7 @@ add_action( 'plugins_loaded',  array( 'TinyPostcode', 'init' ) );
  */
 class TinyPostcode {
   public static $options = array(
-    'api_key' => '';
+    'api_key' => '',
   );
   public static function init() {
     add_action( 'wp_enqueue_scripts',         array( 'TinyPostcode', 'scripts' ) );
